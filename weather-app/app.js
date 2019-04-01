@@ -1,25 +1,19 @@
-const request = require('request')
 const geoCode = require('./utils/geocode')
-//https://api.darksky.net/forecast/a9387689aca3e72f7f63e2a82d5fb2da/37.8267,-122.4233
-// const url = 'https://api.darksky.net/forecast/a9387689aca3e72f7f63e2a82d5fb2da/37.8267,-122.4233?lang=ru'
-// request({ url, json: true }, (error, response) => {
-//   if (error) {
-//     console.log('Unable to connect to weather service')
-//     return
-//   }
-//   if (response.body.error) {
-//     console.log(response.body.error)
-//     return
-//   }
-//   const currently = response.body.currently
-//   const daily = response.body.daily.data[0]
-//   console.log(`${daily.summary} It is currently ${currently.temperature} degrees out. There is a ${currently.precipIntensity}% chance of rain.`)
-// })
+const forecast = require('./utils/forecast')
 
-geoCode('Philadelphia', (error, data) => {
+const location = process.argv[2]
+
+geoCode(location || 'Philadelphia', (error, data) => {
   if (error) {
-    console.error('error', error)
-  } else {
-    console.log(data)
+    return console.error('error', error)
   }
+
+  forecast(data.latitude, data.longitude, (error, forecasrData) => {
+    if (error) {
+      return console.error('error', error)
+    }
+
+    console.log(data.location)
+    console.log(forecasrData)
+  })
 })
